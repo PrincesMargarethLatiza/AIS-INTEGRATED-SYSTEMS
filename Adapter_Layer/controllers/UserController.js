@@ -4,6 +4,7 @@ import { normalizeStudentProfile } from "../../shared/studentProfile.js";
 export const createUser = async (req, res) => {
     try {
         console.log("Adapter Controller: Incoming payload", req.body);
+
         const userProfile = normalizeStudentProfile(req.body);
         const result = await AuthService.registerStudent(userProfile);
 

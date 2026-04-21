@@ -59,7 +59,10 @@ export const getAllUsers = async () => {
         }
     });
 
-    return handleLegacyResponse(response, "Failed to fetch students from legacy system");
+    return handleLegacyResponse(
+        response,
+        "Failed to fetch students from legacy system"
+    );
 };
 
 export const getUserById = async (userId) => {
@@ -70,5 +73,8 @@ export const getUserById = async (userId) => {
         }
     });
 
-    return handleLegacyResponse(response, "Failed to fetch student from legacy system");
+    return handleLegacyResponse(
+        response,
+        "Failed to fetch student from legacy system"
+    );
 };

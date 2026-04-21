@@ -1,7 +1,6 @@
 import express from "express";
 import "dotenv/config.js";
 import cors from "cors";
-
 import UserRoutes from "./routes/UserRoutes.js";
 
 const app = express();
@@ -20,6 +19,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", UserRoutes);
+app.use("/auth", UserRoutes);
 
 app.get("/", (req, res) => {
     res.status(200).json({
@@ -50,5 +50,5 @@ app.use((req, res) => {
 
 app.listen(PORT, HOST, () => {
     console.log(`Adapter_Layer listening on http://${HOST}:${PORT}`);
-    console.log(`Adapter routes ready at /api/auth`);
+    console.log("Adapter routes ready at /api/auth and /auth");
 });
