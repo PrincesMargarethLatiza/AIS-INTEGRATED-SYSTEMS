@@ -3,23 +3,20 @@ import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-const adapterLayerBaseUrl =
-  process.env.ADAPTER_LAYER_URL || 'http://localhost:5000/api/auth/register'
-
 export const createUser = async (userProfile, email, password) => {
-  if (email === '') {
+  if (!email || email.trim() === '') {
     throw new Error('Invalid Email')
   }
-  if (!validator.isEmail(email)) {
+  if (!validator.isEmail(email.trim())) {
     throw new Error('Invalid email format')
   }
 
-  const [user] = await pool.query('SELECT * FROM tbluser WHERE email = ?', [email])
+  const [user] = await pool.query('SELECT * FROM tbluser WHERE email = ?', [email.trim()])
 
   if (user.length === 1) {
     throw new Error('Account already exist')
   }
-  if (password === '') {
+  if (!password || password.trim() === '') {
     throw new Error('Invalid Password')
   }
   if (!validator.isStrongPassword(password)) {
@@ -29,24 +26,9 @@ export const createUser = async (userProfile, email, password) => {
   const salt = bcrypt.genSaltSync(10)
   const newPassword = bcrypt.hashSync(password, salt)
 
-  const response = await fetch(`${adapterLayerBaseUrl}/register`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(userProfile)
-  })
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`Adapter Layer error: ${response.status} - ${errorText}`)
-  }
-
-  await response.json()
-
   const [newUser] = await pool.query(
     'INSERT INTO tbluser (email, password) VALUES(?,?)',
-    [email, newPassword]
+    [email.trim(), newPassword]
   )
 
   return newUser.insertId
@@ -62,11 +44,11 @@ export const getUser = async id => {
 }
 
 export const login = async (email, password) => {
-  if (email === '' || password === '') {
+  if (!email || email.trim() === '' || !password || password === '') {
     throw new Error('Email and Password is required')
   }
 
-  const [user] = await pool.query('SELECT * FROM tbluser WHERE email = ?', [email])
+  const [user] = await pool.query('SELECT * FROM tbluser WHERE email = ?', [email.trim()])
 
   if (user.length === 0) {
     throw new Error(`An account with email: ${email} does not exist`)

@@ -38,6 +38,7 @@ app.get("/health", (req, res) => {
         port: PORT,
         routes: [
             "/api/auth/register",
+            "/api/auth/login",
             "/api/auth",
             "/api/auth/:userId"
         ]
